@@ -3,11 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:money_mate/Screens/Auth/reset_password_ui.dart';
 import 'package:money_mate/Screens/Auth/signin_screen.dart';
 import 'package:money_mate/Screens/Pages/transaction_history.dart';
-import 'package:money_mate/controllers/admob_service.dart';
 import 'package:money_mate/controllers/user_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -15,6 +13,8 @@ class SettingsPage extends StatelessWidget {
   final storage = GetStorage();
 
   final _userController = Get.find<UserController>();
+
+  SettingsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class SettingsPage extends StatelessWidget {
                 onTap: () {
                   FirebaseAuth.instance.signOut();
                   storage.remove('email');
-                  Get.offAll(() => SignInPage());
+                  Get.offAll(() => const SignInPage());
                 },
                 child: Container(
                   width: 88,
@@ -70,9 +70,9 @@ class SettingsPage extends StatelessWidget {
                 return Container(
                   width: 100.0,
                   height: 100.0,
-                  decoration: new BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    image: new DecorationImage(
+                    image: DecorationImage(
                         fit: BoxFit.contain,
                         image: AssetImage('assets/user_pic.png')),
                   ),
@@ -85,7 +85,7 @@ class SettingsPage extends StatelessWidget {
             builder: (_) => Shimmer.fromColors(
               baseColor: Colors.grey[900] as Color,
               highlightColor: Colors.grey[200] as Color,
-              child: Text('${_userController.name}',
+              child: Text(_userController.name,
                   style: TextStyle(
                       color: Colors.grey[900], fontWeight: FontWeight.w500)),
             ),
@@ -107,8 +107,7 @@ class SettingsPage extends StatelessWidget {
                     fontStyle: FontStyle.italic),
               ),
               Text(
-                "₹" +
-                    '${_userController.totalIncome.value - _userController.totalExpanse.value}',
+                '₹ ${_userController.totalIncome.value - _userController.totalExpanse.value}',
                 style: TextStyle(
                     color: _userController.totalIncome.value >
                             _userController.totalExpanse.value
@@ -130,7 +129,7 @@ class SettingsPage extends StatelessWidget {
                   color: Colors.grey[200] as Color,
                   blurRadius: 15.0, // soften the shadow
                   spreadRadius: 5.0, //extend the shadow
-                  offset: Offset(
+                  offset: const Offset(
                     1.0, // Move to right 10  horizontally
                     1.0, // Move to bottom 10 Vertically
                   ),
@@ -148,11 +147,8 @@ class SettingsPage extends StatelessWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Icon(
-                            Icons.arrow_drop_up,
-                            color: Colors.green,
-                            size: 40,
-                          ),
+                          const Icon(Icons.arrow_drop_up,
+                              color: Colors.green, size: 40),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
@@ -184,11 +180,8 @@ class SettingsPage extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.red,
-                            size: 40,
-                          ),
+                          const Icon(Icons.arrow_drop_down,
+                              color: Colors.red, size: 40),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
@@ -267,7 +260,7 @@ class SettingsPage extends StatelessWidget {
                               color: Colors.grey[500],
                               fontWeight: FontWeight.w500),
                         ),
-                        Icon(Icons.arrow_right),
+                        const Icon(Icons.arrow_right),
                       ],
                     ),
                   ),
@@ -275,7 +268,7 @@ class SettingsPage extends StatelessWidget {
               ),
               _sizedBoxVertical(),
               InkWell(
-                onTap: () => Get.to(() => THIstory()),
+                onTap: () => Get.to(() => TransactionHistory()),
                 child: Container(
                   width: Get.width / 1.05,
                   decoration: BoxDecoration(
@@ -292,7 +285,7 @@ class SettingsPage extends StatelessWidget {
                               color: Colors.grey[500],
                               fontWeight: FontWeight.w500),
                         ),
-                        Icon(Icons.arrow_right),
+                        const Icon(Icons.arrow_right),
                       ],
                     ),
                   ),
@@ -345,7 +338,5 @@ class SettingsPage extends StatelessWidget {
 }
 
 Widget _sizedBoxVertical() {
-  return SizedBox(
-    height: 10,
-  );
+  return const SizedBox(height: 10);
 }

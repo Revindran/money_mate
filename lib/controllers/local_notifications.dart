@@ -16,7 +16,7 @@ class LocalNotificationsController extends GetxController {
       FlutterLocalNotificationsPlugin();
 
   var storage = GetStorage();
-  var email;
+  var email = "";
 
   @override
   void onInit() async {
@@ -29,10 +29,11 @@ class LocalNotificationsController extends GetxController {
         .then((value) async {
       for (int i = 0; i < value.docs.length; i++) {
         QueryDocumentSnapshot snapshot = value.docs[i];
-        if (snapshot['Type'] == 'Income')
+        if (snapshot['Type'] == 'Income') {
           totalIncome += int.parse(snapshot['Amount']);
-        else if (snapshot['Type'] == 'Expanse')
+        } else if (snapshot['Type'] == 'Expanse') {
           totalExpanse += int.parse(snapshot['Amount']);
+        }
       }
     });
     super.onInit();
@@ -43,7 +44,7 @@ class LocalNotificationsController extends GetxController {
         FlutterLocalNotificationsPlugin();
 
     AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings("ic_launcher");
+        const AndroidInitializationSettings("ic_launcher");
 
     final InitializationSettings initializationSettings =
         InitializationSettings(
@@ -59,14 +60,14 @@ class LocalNotificationsController extends GetxController {
   }
 
   //Instant Notifications
-  Future instantNofitication() async {
-    var android = AndroidNotificationDetails("id", "channel",
+  Future instantNotification() async {
+    var android = const AndroidNotificationDetails("id", "channel",
         channelDescription: "description",
         importance: Importance.max,
         priority: Priority.high,
         ticker: 'ticker');
 
-    var platform = new NotificationDetails(android: android);
+    var platform = NotificationDetails(android: android);
 
     await _flutterLocalNotificationsPlugin.show(
         0, "Demo instant notification", "Tap to do something", platform,
@@ -75,7 +76,7 @@ class LocalNotificationsController extends GetxController {
 
   //Image notification
   Future imageNotification() async {
-    var bigPicture = BigPictureStyleInformation(
+    var bigPicture = const BigPictureStyleInformation(
         DrawableResourceAndroidBitmap("notify_icon"),
         largeIcon: DrawableResourceAndroidBitmap("notify_icon"),
         contentTitle: "Demo image notification",
@@ -96,7 +97,7 @@ class LocalNotificationsController extends GetxController {
   // Stylish Notification
   Future stylishNotification(
       RxInt totalIncome, RxInt totalExpanse, RxInt totalBalance) async {
-    var android = AndroidNotificationDetails("id", "channel",
+    var android = const AndroidNotificationDetails("id", "channel",
         channelDescription: "description",
         importance: Importance.max,
         priority: Priority.high,
@@ -109,7 +110,7 @@ class LocalNotificationsController extends GetxController {
         styleInformation: MediaStyleInformation(
             htmlFormatContent: true, htmlFormatTitle: true));
 
-    var platform = new NotificationDetails(android: android);
+    var platform = NotificationDetails(android: android);
 
     await _flutterLocalNotificationsPlugin.show(
         0,
@@ -121,8 +122,7 @@ class LocalNotificationsController extends GetxController {
   //Scheduled Notification
   Future scheduledNotification() async {
     var interval = RepeatInterval.everyMinute;
-    var time = new Time(14, 50, 0);
-    var bigPicture = BigPictureStyleInformation(
+    var bigPicture = const BigPictureStyleInformation(
         DrawableResourceAndroidBitmap("ic_launcher"),
         largeIcon: DrawableResourceAndroidBitmap("ic_launcher"),
         contentTitle: "Demo image notification",
@@ -137,7 +137,7 @@ class LocalNotificationsController extends GetxController {
         playSound: true,
         styleInformation: bigPicture);
 
-    var platform = new NotificationDetails(android: android);
+    var platform = NotificationDetails(android: android);
 
     await _flutterLocalNotificationsPlugin.periodicallyShow(
         0,

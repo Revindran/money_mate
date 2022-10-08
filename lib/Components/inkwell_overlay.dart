@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class InkWellOverlay extends StatelessWidget {
-  const InkWellOverlay({
+  const InkWellOverlay({Key? key,
     required this.openContainer,
     required this.width,
     required this.height,
     required this.child,
-  });
+  }): super(key: key);
 
   final VoidCallback openContainer;
   final double width;

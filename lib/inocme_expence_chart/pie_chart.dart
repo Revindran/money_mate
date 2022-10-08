@@ -21,9 +21,11 @@ class PieChart extends CustomPainter {
 
     double total = 0;
     // Calculate total amount from each category
-    categories.forEach((expense) => total += expense.amount);
+    for (var expense in categories) {
+      total += expense.amount;
+    }
 
-    // The angle/radian at 12 o'clcok
+    // The angle/radian at 12 o'clock
     double startRadian = -pi / 2;
 
     for (var index = 0; index < categories.length; index++) {

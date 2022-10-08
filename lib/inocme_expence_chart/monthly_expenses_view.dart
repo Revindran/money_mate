@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:money_mate/inocme_expence_chart/pie_chart_view.dart';
 
 import 'categories_row.dart';
 
-class MontlyExpensesView extends StatelessWidget {
+class MonthlyExpensesView extends StatelessWidget {
+  const MonthlyExpensesView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -30,13 +31,13 @@ class MontlyExpensesView extends StatelessWidget {
                         fontStyle: FontStyle.italic,
                         fontSize: 16),
                   ),
-                  Container(
+                  SizedBox(
                     width: Get.width / 1.1,
                     height: Get.height / 5,
                     child: Row(
                       children: <Widget>[
                         PieChartView(),
-                        CategoriesRow(),
+                        const CategoriesRow(),
                       ],
                     ),
                   ),

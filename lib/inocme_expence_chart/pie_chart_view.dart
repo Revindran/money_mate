@@ -4,15 +4,17 @@ import 'package:money_mate/controllers/user_controller.dart';
 import 'package:money_mate/inocme_expence_chart/pie_chart.dart';
 
 class PieChartView extends StatelessWidget {
+  final c = Get.find<UserController>();
 
-var c = Get.find<UserController>();
+  PieChartView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
       flex: 4,
       child: LayoutBuilder(
         builder: (context, constraint) => Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
             boxShadow: [
@@ -36,11 +38,11 @@ var c = Get.find<UserController>();
                 child: SizedBox(
                   width: constraint.maxWidth * 0.6,
                   child: CustomPaint(
-                    child: Center(),
                     foregroundPainter: PieChart(
                       width: constraint.maxWidth * 0.5,
                       categories: kCategories,
                     ),
+                    child: const Center(),
                   ),
                 ),
               ),
@@ -51,7 +53,7 @@ var c = Get.find<UserController>();
                     color: Colors.white,
                     shape: BoxShape.circle,
                     boxShadow: [
-                      BoxShadow(
+                      const BoxShadow(
                         blurRadius: 1,
                         offset: Offset(-1, -1),
                         color: Colors.white,
@@ -59,7 +61,7 @@ var c = Get.find<UserController>();
                       BoxShadow(
                         spreadRadius: -2,
                         blurRadius: 10,
-                        offset: Offset(5, 5),
+                        offset: const Offset(5, 5),
                         color: Colors.black.withOpacity(0.5),
                       )
                     ],
@@ -75,10 +77,13 @@ var c = Get.find<UserController>();
                               fontWeight: FontWeight.w500,
                               fontStyle: FontStyle.italic),
                         ),
-                        Text("₹ " +'${(c.totalIncome.value-c.totalExpanse.value)}',style: TextStyle(
-                            color: Colors.green[500],
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),),
+                        Text(
+                          '₹ ${(c.totalIncome.value - c.totalExpanse.value)}',
+                          style: TextStyle(
+                              color: Colors.green[500],
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
                       ],
                     ),
                   ),

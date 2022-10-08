@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -11,10 +11,12 @@ class ResetPasswordUI extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final emailController = TextEditingController();
-  var storage = GetStorage();
+  final storage = GetStorage();
 
+  ResetPasswordUI({Key? key}) : super(key: key);
+
+  @override
   Widget build(BuildContext context) {
-    var email = storage.read('email');
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -42,9 +44,9 @@ class ResetPasswordUI extends StatelessWidget {
                       return Container(
                         width: 150.0,
                         height: 150.0,
-                        decoration: new BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          image: new DecorationImage(
+                          image: DecorationImage(
                             fit: BoxFit.contain,
                             image: AssetImage('assets/user_pic.png'),
                           ),
@@ -52,19 +54,21 @@ class ResetPasswordUI extends StatelessWidget {
                       );
                     }),
                   ),
-                  SizedBox(height: 48.0),
+                  const SizedBox(height: 48.0),
                   FormInputFieldWithIcon(
                     controller: emailController,
                     iconPrefix: Icons.email,
                     labelText: 'Enter Your Email',
                     validator: Validator().email,
                     keyboardType: TextInputType.emailAddress,
-                    onChanged: (value) => null,
+                    onChanged: (value) {
+                      if (kDebugMode) {
+                        print(value);
+                      }
+                    },
                     onSaved: (value) => emailController.text = value!,
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   PrimaryButton(
                       labelText: 'Reset Password',
                       onPressed: () async {
@@ -73,9 +77,7 @@ class ResetPasswordUI extends StatelessWidget {
                               email: emailController.text);
                         }
                       }),
-                  SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   // signInLink(context),
                 ],
               ),
@@ -85,14 +87,4 @@ class ResetPasswordUI extends StatelessWidget {
       ),
     );
   }
-
-/*signInLink(BuildContext context) {
-    if (emailController.text == '') {
-      return LabelButton(
-        labelText: 'auth.signInonResetPasswordLabelButton'.tr,
-        onPressed: () => Get.offAll(SignInPage()),
-      );
-    }
-    return Container(width: 0, height: 0);
-  }*/
 }

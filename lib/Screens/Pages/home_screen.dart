@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -12,18 +13,19 @@ import 'package:money_mate/controllers/local_notifications.dart';
 import 'package:money_mate/controllers/user_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
-// ignore: must_be_immutable
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-var storage = GetStorage();
+final storage = GetStorage();
 final _firStore = FirebaseFirestore.instance;
-var email = storage.read('email');
+final email = storage.read('email');
 const double _fabDimension = 56;
 
-class _HomePageState extends State<HomePage>
+class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late AnimationController animationController;
   late Animation degOneTranslationAnimation,
@@ -36,7 +38,7 @@ class _HomePageState extends State<HomePage>
     return degree / unitRadian;
   }
 
-  ContainerTransitionType _transitionType = ContainerTransitionType.fade;
+  final _transitionType = ContainerTransitionType.fade;
 
   @override
   void dispose() {
@@ -46,12 +48,12 @@ class _HomePageState extends State<HomePage>
 
   final _controller = Get.find<LocalNotificationsController>();
   final UserController _userController = Get.find();
-  final AdMobService _service = new AdMobService();
+  final AdMobService _service = AdMobService();
 
   @override
   void initState() {
-    animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 250));
+    animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 250));
     degOneTranslationAnimation = TweenSequence([
       TweenSequenceItem<double>(
           tween: Tween<double>(begin: 0.0, end: 1.2), weight: 75.0),
@@ -93,7 +95,7 @@ class _HomePageState extends State<HomePage>
     final colorScheme = Theme.of(context).colorScheme;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         width: size.width,
         height: size.height,
         child: Stack(
@@ -106,7 +108,7 @@ class _HomePageState extends State<HomePage>
                 _headerWidget(),
                 _sizedBoxVertical(),
                 _incomeWidget(),
-                Padding(padding: EdgeInsets.only(top: 10)),
+                const Padding(padding: EdgeInsets.only(top: 10)),
                 _recentTransactions(),
                 StreamBuilder<QuerySnapshot>(
                   stream: _firStore
@@ -118,18 +120,19 @@ class _HomePageState extends State<HomePage>
                   // ignore: missing_return
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> querySnapshot) {
-                    if (querySnapshot.hasError)
-                      return Center(child: Text('Has Error'));
+                    if (querySnapshot.hasError) {
+                      return const Center(child: Text('Has Error'));
+                    }
                     if (querySnapshot.connectionState ==
                         ConnectionState.waiting) {
-                      CupertinoActivityIndicator();
+                      const CupertinoActivityIndicator();
                     }
                     if (querySnapshot.data == null) {
-                      return Center(
+                      return const Center(
                         child: CupertinoActivityIndicator(),
                       );
                     }
-                    if (querySnapshot.data!.docs.length == 0) {
+                    if (querySnapshot.data!.docs.isEmpty) {
                       return _noTransactions();
                     } else {
                       return Expanded(
@@ -146,7 +149,7 @@ class _HomePageState extends State<HomePage>
                             return InkWell(
                               onTap: () => {
                                 _service.showInterstitial(),
-                                Get.to(() => THIstory())
+                                Get.to(() => TransactionHistory())
                               },
                               child: Padding(
                                 padding:
@@ -199,7 +202,7 @@ class _HomePageState extends State<HomePage>
                                                         myTransaction[
                                                                 'Amount'] ??
                                                             'N/A',
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             color:
                                                                 Colors.green),
                                                       )
@@ -207,13 +210,11 @@ class _HomePageState extends State<HomePage>
                                                         myTransaction[
                                                                 'Amount'] ??
                                                             'N/A',
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             color: Colors
                                                                 .redAccent),
                                                       ),
-                                                SizedBox(
-                                                  width: 16,
-                                                ),
+                                                const SizedBox(width: 16),
                                                 Icon(
                                                   CupertinoIcons
                                                       .arrow_turn_down_right,
@@ -225,9 +226,7 @@ class _HomePageState extends State<HomePage>
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: 10,
-                                    )
+                                    const SizedBox(height: 10)
                                   ],
                                 ),
                               ),
@@ -245,7 +244,7 @@ class _HomePageState extends State<HomePage>
       ),
       floatingActionButton: OpenContainer(
         transitionType: _transitionType,
-        openBuilder: (context, openContainer) => AddTransactions(),
+        openBuilder: (context, openContainer) => const AddTransactions(),
         closedElevation: 6,
         closedShape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
@@ -270,16 +269,19 @@ class _HomePageState extends State<HomePage>
   }
 
   void click() {
-    print('Clicked');
-    if (animationController.isCompleted)
+    if (kDebugMode) {
+      print('Clicked');
+    }
+    if (animationController.isCompleted) {
       animationController.reverse();
-    else
+    } else {
       animationController.forward();
+    }
   }
 
   Widget _headerWidget() {
     return GestureDetector(
-      onTap: () => Get.to(BottomHomeBar(index: 3)),
+      onTap: () => Get.to(const BottomHomeBar(index: 3)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
@@ -290,9 +292,9 @@ class _HomePageState extends State<HomePage>
                 return Container(
                   width: 55.0,
                   height: 55.0,
-                  decoration: new BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    image: new DecorationImage(
+                    image: DecorationImage(
                       fit: BoxFit.cover,
                       image: AssetImage('assets/user_pic.png'),
                     ),
@@ -312,14 +314,12 @@ class _HomePageState extends State<HomePage>
                     style: TextStyle(
                         color: Colors.grey[500], fontWeight: FontWeight.w500),
                   ),
-                  SizedBox(
-                    height: 4,
-                  ),
+                  const SizedBox(height: 4),
                   GetBuilder<UserController>(
                     builder: (_) => Shimmer.fromColors(
                       baseColor: Colors.grey[900] as Color,
                       highlightColor: Colors.grey[200] as Color,
-                      child: Text('${_userController.name}',
+                      child: Text(_userController.name,
                           style: TextStyle(
                               color: Colors.grey[900],
                               fontWeight: FontWeight.w500)),
@@ -352,12 +352,10 @@ class _HomePageState extends State<HomePage>
                     style: TextStyle(
                         color: Colors.grey[500], fontWeight: FontWeight.w500),
                   ),
-                  SizedBox(
-                    height: 4,
-                  ),
+                  const SizedBox(height: 4),
                   Row(
                     children: [
-                      Text("₹"),
+                      const Text("₹"),
                       Obx(() {
                         return Text(
                           _userController.totalIncome.toString(),
@@ -380,12 +378,10 @@ class _HomePageState extends State<HomePage>
                     style: TextStyle(
                         color: Colors.grey[500], fontWeight: FontWeight.w500),
                   ),
-                  SizedBox(
-                    height: 4,
-                  ),
+                  const SizedBox(height: 4),
                   Row(
                     children: [
-                      Text("₹"),
+                      const Text("₹"),
                       Obx(() {
                         return Text(
                           _userController.totalExpanse.toString(),
@@ -408,9 +404,7 @@ class _HomePageState extends State<HomePage>
 }
 
 Widget _sizedBoxVertical() {
-  return SizedBox(
-    height: 20,
-  );
+  return const SizedBox(height: 20);
 }
 
 Widget _recentTransactions() {
@@ -430,25 +424,21 @@ Widget _recentTransactions() {
 }
 
 Widget _noTransactions() {
-  return Container(
-    child: Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset(
-          "assets/no_transactions.gif",
-        ),
-        Text(
-          'No Transactions Found in your History',
-          style:
-              TextStyle(color: Colors.grey[400], fontStyle: FontStyle.italic),
-        ),
-        Text(
-          'Try create one and Save Money',
-          style:
-              TextStyle(color: Colors.grey[400], fontStyle: FontStyle.italic),
-        ),
-      ],
-    )),
-  );
+  return Center(
+      child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Image.asset(
+        "assets/no_transactions.gif",
+      ),
+      Text(
+        'No Transactions Found in your History',
+        style: TextStyle(color: Colors.grey[400], fontStyle: FontStyle.italic),
+      ),
+      Text(
+        'Try create one and Save Money',
+        style: TextStyle(color: Colors.grey[400], fontStyle: FontStyle.italic),
+      ),
+    ],
+  ));
 }

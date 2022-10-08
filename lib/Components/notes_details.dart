@@ -5,14 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-// ignore: must_be_immutable
 class NotesDetails extends StatefulWidget {
-  DocumentSnapshot snapData;
+  final DocumentSnapshot snapData;
 
-  NotesDetails({required this.snapData});
+  const NotesDetails({Key? key, required this.snapData}) : super(key: key);
 
   @override
-  _NotesDetailsState createState() => _NotesDetailsState();
+  NotesDetailsState createState() => NotesDetailsState();
 }
 
 DateTime dateTime = DateTime.now();
@@ -23,7 +22,7 @@ var note = fire
     .doc(FirebaseAuth.instance.currentUser!.email)
     .collection('Notes');
 
-class _NotesDetailsState extends State<NotesDetails> {
+class NotesDetailsState extends State<NotesDetails> {
   bool _isEditingText = false;
   late TextEditingController _titleController, _noteController;
   late String titleText;
@@ -51,7 +50,6 @@ class _NotesDetailsState extends State<NotesDetails> {
     super.dispose();
   }
 
-//
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +58,7 @@ class _NotesDetailsState extends State<NotesDetails> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          '$titleText',
+          titleText,
           style:
               TextStyle(color: Colors.grey[400], fontStyle: FontStyle.italic),
         ),
@@ -88,118 +86,115 @@ class _NotesDetailsState extends State<NotesDetails> {
           )
         ],
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Created: $createdDate",
-                    style: TextStyle(
-                        color: Colors.grey[400], fontStyle: FontStyle.italic),
-                  ),
-                  updatedDate == ""
-                      ? Text(
-                          "LastUpdated: -",
-                          style: TextStyle(
-                              color: Colors.grey[400],
-                              fontStyle: FontStyle.italic),
-                        )
-                      : Text(
-                          "LastUpdated: $updatedDate",
-                          style: TextStyle(
-                              color: Colors.grey[400],
-                              fontStyle: FontStyle.italic),
-                        ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 10,
-                bottom: 5,
-              ),
-              child: Container(
-                width: MediaQuery.of(context).size.width / 1.05,
-                decoration: BoxDecoration(
-                    color: Colors.amber[100],
-                    borderRadius: BorderRadius.circular(20)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: _editTitleTextField(),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Created: $createdDate",
+                  style: TextStyle(
+                      color: Colors.grey[400], fontStyle: FontStyle.italic),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 10,
-                bottom: 5,
-              ),
-              child: Container(
-                width: MediaQuery.of(context).size.width / 1.05,
-                decoration: BoxDecoration(
-                    color: Colors.amber[100],
-                    borderRadius: BorderRadius.circular(20)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: _editNoteTextField(),
-                ),
-              ),
-            ),
-            titleText == _titleController.text &&
-                    noteText == _noteController.text
-                ? _nonUpdateText()
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 10,
-                          bottom: 5,
-                        ),
-                        child: GestureDetector(
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.amberAccent,
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text("Update"),
-                            ),
-                          ),
-                          onTap: () {
-                            _updateNote();
-                          },
-                        ),
+                updatedDate == ""
+                    ? Text(
+                        "LastUpdated: -",
+                        style: TextStyle(
+                            color: Colors.grey[400],
+                            fontStyle: FontStyle.italic),
+                      )
+                    : Text(
+                        "LastUpdated: $updatedDate",
+                        style: TextStyle(
+                            color: Colors.grey[400],
+                            fontStyle: FontStyle.italic),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 10,
-                          bottom: 5,
-                        ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 10,
+              bottom: 5,
+            ),
+            child: Container(
+              width: MediaQuery.of(context).size.width / 1.05,
+              decoration: BoxDecoration(
+                  color: Colors.amber[100],
+                  borderRadius: BorderRadius.circular(20)),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: _editTitleTextField(),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 10,
+              bottom: 5,
+            ),
+            child: Container(
+              width: MediaQuery.of(context).size.width / 1.05,
+              decoration: BoxDecoration(
+                  color: Colors.amber[100],
+                  borderRadius: BorderRadius.circular(20)),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: _editNoteTextField(),
+              ),
+            ),
+          ),
+          titleText == _titleController.text && noteText == _noteController.text
+              ? _nonUpdateText()
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 10,
+                        bottom: 5,
+                      ),
+                      child: GestureDetector(
                         child: Container(
                           decoration: BoxDecoration(
                               color: Colors.amberAccent,
                               borderRadius: BorderRadius.circular(20)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text('Cancel'),
+                          child: const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Text("Update"),
                           ),
                         ),
+                        onTap: () {
+                          _updateNote();
+                        },
                       ),
-                    ],
-                  )
-          ],
-        ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 10,
+                        bottom: 5,
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.amberAccent,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text('Cancel'),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+        ],
       ),
     );
   }
 
   Widget _editTitleTextField() {
-    if (_isEditingText)
+    if (_isEditingText) {
       return TextField(
         keyboardType: TextInputType.multiline,
         minLines: 1,
@@ -213,6 +208,7 @@ class _NotesDetailsState extends State<NotesDetails> {
         autofocus: true,
         controller: _titleController,
       );
+    }
     return InkWell(
       onTap: () {
         setState(() {
@@ -221,7 +217,7 @@ class _NotesDetailsState extends State<NotesDetails> {
       },
       child: Text(
         titleText,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.black,
           fontSize: 18.0,
         ),
@@ -230,7 +226,7 @@ class _NotesDetailsState extends State<NotesDetails> {
   }
 
   Widget _editNoteTextField() {
-    if (_isEditingText)
+    if (_isEditingText) {
       return TextField(
         keyboardType: TextInputType.multiline,
         minLines: 1,
@@ -244,6 +240,7 @@ class _NotesDetailsState extends State<NotesDetails> {
         autofocus: true,
         controller: _noteController,
       );
+    }
     return InkWell(
       onTap: () {
         setState(() {
@@ -252,7 +249,7 @@ class _NotesDetailsState extends State<NotesDetails> {
       },
       child: Text(
         noteText,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.black,
           fontSize: 18.0,
         ),
@@ -266,7 +263,7 @@ class _NotesDetailsState extends State<NotesDetails> {
       Get.snackbar('The Note has deleted successfully..',
           'The Note has deleted successfully',
           snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
           colorText: Get.theme.snackBarTheme.actionTextColor);
     });
@@ -280,7 +277,7 @@ class _NotesDetailsState extends State<NotesDetails> {
     }).then((value) {
       Get.snackbar('Updated Successful..', 'The Note has Updated successfully',
           snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
           colorText: Get.theme.snackBarTheme.actionTextColor);
     });

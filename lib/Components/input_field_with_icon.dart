@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class FormInputFieldWithIcon extends StatelessWidget {
-  FormInputFieldWithIcon(
-      {required this.controller,
+  const FormInputFieldWithIcon(
+      {Key? key,required this.controller,
         required this.iconPrefix,
         required this.labelText,
         required this.validator,
@@ -11,7 +11,7 @@ class FormInputFieldWithIcon extends StatelessWidget {
         this.minLines = 1,
         this.maxLines,
         required this.onChanged,
-        required this.onSaved});
+        required this.onSaved}): super(key: key);
 
   final TextEditingController controller;
   final IconData iconPrefix;
@@ -46,7 +46,7 @@ class FormInputFieldWithIcon extends StatelessWidget {
 
 
 class PrimaryButton extends StatelessWidget {
-  PrimaryButton({required this.labelText, required this.onPressed});
+  const PrimaryButton({Key? key,required this.labelText, required this.onPressed}): super(key: key);
 
   final String labelText;
   final void Function() onPressed;
@@ -57,7 +57,7 @@ class PrimaryButton extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         labelText.toUpperCase(),
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -65,17 +65,17 @@ class PrimaryButton extends StatelessWidget {
 
 
 class LabelButton extends StatelessWidget {
-  LabelButton({required this.labelText, required this.onPressed});
+  const LabelButton({Key? key,required this.labelText, required this.onPressed}): super(key: key);
   final String labelText;
   final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
+      onPressed: onPressed,
       child: Text(
         labelText,
       ),
-      onPressed: onPressed,
     );
   }
 }

@@ -2,17 +2,17 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:money_mate/Components/bottom_bar.dart';
 import 'package:money_mate/Screens/Auth/signin_screen.dart';
-import 'package:money_mate/Screens/Pages/home_screen.dart';
 
 class UserController extends GetxController {
   final _fireStore = FirebaseFirestore.instance;
@@ -22,7 +22,7 @@ class UserController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   RxInt totalIncome = 0.obs, totalExpanse = 0.obs, totalBalance = 0.obs;
   var switchValue = true;
-  var email;
+  var email = "";
 
   getUser() {
     email = storage.read('email');
@@ -40,14 +40,14 @@ class UserController extends GetxController {
       Get.snackbar('Resetting Password Email Send',
           'Check your Email for Resetting the Password',
           snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 5),
+          duration: const Duration(seconds: 5),
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
           colorText: Get.theme.snackBarTheme.actionTextColor);
       Get.off(() => SignInPage());
     } on FirebaseAuthException catch (error) {
       Get.snackbar('Error', error.message.toString(),
           snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 10),
+          duration: const Duration(seconds: 10),
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
           colorText: Get.theme.snackBarTheme.actionTextColor);
     }
@@ -62,10 +62,11 @@ class UserController extends GetxController {
         .then((value) {
       for (int i = 0; i < value.docs.length; i++) {
         QueryDocumentSnapshot snapshot = value.docs[i];
-        if (snapshot['Type'] == 'Income')
+        if (snapshot['Type'] == 'Income') {
           totalIncome += int.parse(snapshot['Amount']);
-        else if (snapshot['Type'] == 'Expanse')
+        } else if (snapshot['Type'] == 'Expanse') {
           totalExpanse += int.parse(snapshot['Amount']);
+        }
         update();
       }
     });
@@ -74,8 +75,9 @@ class UserController extends GetxController {
   void switchValueChange() {
     if (switchValue == true) {
       switchValue = false;
-    } else
+    } else {
       switchValue = true;
+    }
     update();
   }
 
@@ -89,10 +91,12 @@ class UserController extends GetxController {
   late Reference reference;
 
   Future getPhotoAndUpload() async {
-    var rng = new Random();
+    var rng = Random();
     String randomName = "";
     for (var i = 0; i < 20; i++) {
-      print(rng.nextInt(100));
+      if (kDebugMode) {
+        print(rng.nextInt(100));
+      }
       randomName += rng.nextInt(100).toString();
     }
     result = (await FilePicker.platform.pickFiles())!;
@@ -103,14 +107,18 @@ class UserController extends GetxController {
       // User canceled the picker
     }
     fileName = randomName;
-    print(fileName);
-    print('${file.readAsBytesSync()}');
+    if (kDebugMode) {
+      print(fileName);
+    }
+    if (kDebugMode) {
+      print('${file.readAsBytesSync()}');
+    }
     savePhoto(file.readAsBytesSync(), fileName);
   }
 
   Future savePhoto(List<int> asset, String name) async {
     Get.snackbar('Uploading File', 'Uploading File Please Wait',
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
         snackPosition: SnackPosition.BOTTOM,
         showProgressIndicator: true);
     reference = FirebaseStorage.instance.ref().child("UserImages").child(name);
@@ -120,25 +128,29 @@ class UserController extends GetxController {
       try {
         fileUrl = await reference.getDownloadURL();
       } catch (onError) {
-        print("Error");
+        if (kDebugMode) {
+          print("Error");
+        }
         Get.snackbar(
           'Error',
           onError.toString(),
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
           snackPosition: SnackPosition.BOTTOM,
           shouldIconPulse: true,
         );
       }
-      print(fileUrl);
+      if (kDebugMode) {
+        print(fileUrl);
+      }
     }).then((value) {
       Get.snackbar('Upload Successful', 'Upload Successfully Done',
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
           snackPosition: SnackPosition.BOTTOM,
           snackStyle: SnackStyle.FLOATING);
       fireStore.collection('Users').doc(email).update({
         "photoUrl": fileUrl,
       });
-      Get.off(BottomHomeBar(index: 0,));
+      Get.off(const BottomHomeBar(index: 0));
     });
   }
 }

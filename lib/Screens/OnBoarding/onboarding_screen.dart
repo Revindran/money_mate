@@ -6,15 +6,17 @@ import 'package:introduction_screen/introduction_screen.dart';
 import '../Auth/signin_screen.dart';
 
 class OnBoardingPage extends StatefulWidget {
+  const OnBoardingPage({Key? key}) : super(key: key);
+
   @override
-  _OnBoardingPageState createState() => _OnBoardingPageState();
+  OnBoardingPageState createState() => OnBoardingPageState();
 }
 
-class _OnBoardingPageState extends State<OnBoardingPage> {
+class OnBoardingPageState extends State<OnBoardingPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   void _onIntroEnd(context) {
-    Get.off(() => SignInPage());
+    Get.off(() => const SignInPage());
   }
 
   Widget _buildImage(String assetName, [double width = 350]) {
@@ -25,8 +27,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   Widget build(BuildContext context) {
     const bodyStyle = TextStyle(
         fontSize: 19.0, fontStyle: FontStyle.italic, color: Colors.grey);
-    const color = Colors.grey;
-    const pageDecoration = const PageDecoration(
+    const pageDecoration = PageDecoration(
       titleTextStyle: TextStyle(
           fontSize: 24.0, fontWeight: FontWeight.w700, color: Colors.grey),
       bodyTextStyle: bodyStyle,
@@ -38,11 +39,11 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     return IntroductionScreen(
       key: introKey,
       globalBackgroundColor: Colors.white,
-      globalHeader: Align(
+      globalHeader: const Align(
         alignment: Alignment.topRight,
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(top: 16, right: 16),
+            padding: EdgeInsets.only(top: 16, right: 16),
             // child: _buildImage('flutter.png', 100),
           ),
         ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobService {
@@ -47,7 +48,7 @@ class AdMobService {
   }
 
   static BannerAd createBannerAd() {
-    BannerAd ad = new BannerAd(
+    BannerAd ad = BannerAd(
       size: AdSize.banner,
       adUnitId: bannerAdUnitId,
       listener: BannerAdListener(
@@ -58,13 +59,13 @@ class AdMobService {
         onAdOpened: (Ad ad) => print('Ad Opened'),
         onAdClosed: (Ad ad) => print('On Ad Closed'),
       ),
-      request: AdRequest(),
+      request: const AdRequest(),
     );
     return ad;
   }
 
   static BannerAd createSettingBannerAd() {
-    BannerAd ad = new BannerAd(
+    BannerAd ad = BannerAd(
       size: AdSize.banner,
       adUnitId: settingBannerAdUnitId,
       listener: BannerAdListener(
@@ -75,7 +76,7 @@ class AdMobService {
         onAdOpened: (Ad ad) => print('Ad Opened'),
         onAdClosed: (Ad ad) => print('On Ad Closed'),
       ),
-      request: AdRequest(),
+      request: const AdRequest(),
     );
     return ad;
   }
@@ -140,18 +141,26 @@ class AdMobService {
 
 // show interstitial ads to user
   void showInterstitialFroNote() {
-    print('Show Clicked');
+    if (kDebugMode) {
+      print('Show Clicked');
+    }
     if (_interstitialAdNote == null) {
       return;
     }
     _interstitialAdNote!.fullScreenContentCallback = FullScreenContentCallback(
         onAdShowedFullScreenContent: (InterstitialAd ad) {
-      print("ad onAdshowedFullscreen");
+      if (kDebugMode) {
+        print("ad onAdshowedFullscreen");
+      }
     }, onAdDismissedFullScreenContent: (InterstitialAd ad) {
-      print("ad Disposed");
+      if (kDebugMode) {
+        print("ad Disposed");
+      }
       ad.dispose();
     }, onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError aderror) {
-      print('$ad OnAdFailed $aderror');
+      if (kDebugMode) {
+        print('$ad OnAdFailed $aderror');
+      }
       ad.dispose();
       createInterstitialForNote();
     });

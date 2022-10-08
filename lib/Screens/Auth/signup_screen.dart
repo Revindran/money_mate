@@ -1,18 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:money_mate/Components/bottom_bar.dart';
 import 'package:money_mate/Screens/Auth/signin_screen.dart';
-import 'package:money_mate/Screens/Pages/home_screen.dart';
 
 class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key}) : super(key: key);
+
   @override
-  _SignUpPageState createState() => _SignUpPageState();
+  SignUpPageState createState() => SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class SignUpPageState extends State<SignUpPage> {
   late String _fName, _email, _password;
 
   bool _isLoading = false;
@@ -21,7 +23,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  final firestoreInstance = FirebaseFirestore.instance;
+  final fireStoreInstance = FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -32,7 +34,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   final snackBar = SnackBar(
-    content: Text('Yay! A SnackBar!'),
+    content: const Text('Yay! A SnackBar!'),
     action: SnackBarAction(
       label: 'Undo',
       onPressed: () {
@@ -52,7 +54,7 @@ class _SignUpPageState extends State<SignUpPage> {
             children: [
               Container(
                 height: MediaQuery.of(context).size.height / 1.8,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     borderRadius:
                         BorderRadius.vertical(bottom: Radius.circular(40)),
                     color: Colors.amber),
@@ -112,7 +114,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       const SizedBox(height: 20.0),
                       TextField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Full Name",
                         ),
@@ -122,7 +124,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       const SizedBox(height: 20.0),
                       TextField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Email address",
                         ),
@@ -133,7 +135,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       const SizedBox(height: 20.0),
                       TextField(
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Password",
                         ),
@@ -143,8 +145,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       const SizedBox(height: 16.0),
                       _isLoading
-                          ? CircularProgressIndicator()
-                          : Container(
+                          ? const CircularProgressIndicator()
+                          : SizedBox(
                               width: MediaQuery.of(context).size.width / 1.5,
                               // ignore: deprecated_member_use
                               child: RaisedButton(
@@ -156,7 +158,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 onPressed: () async {
                                   _validateAndRegister();
                                 },
-                                child: Text("Let\'s Go"),
+                                child: const Text("Let's Go"),
                               ),
                             ),
                     ],
@@ -166,7 +168,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Already have an account?"),
+                    const Text("Already have an account?"),
                     const SizedBox(height: 5.0),
                     InkWell(
                       child: Text(
@@ -179,8 +181,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                       onTap: () {
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (_) => SignInPage()));
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (_) => const SignInPage()));
                       },
                     ),
                   ],
@@ -197,7 +199,7 @@ class _SignUpPageState extends State<SignUpPage> {
     if (_fName.isEmpty || _email.isEmpty || _password.isEmpty) {
       Get.snackbar('Please Fill all the fields to Continue.',
           'Please Fill all the fields to Continue.',
-          duration: Duration(seconds: 3), snackPosition: SnackPosition.BOTTOM);
+          duration: const Duration(seconds: 3), snackPosition: SnackPosition.BOTTOM);
     } else {
       setState(() {
         _isLoading = true;
@@ -220,8 +222,10 @@ class _SignUpPageState extends State<SignUpPage> {
           .then(
         (result) {
           storage.write('email', _email);
-          Get.offAll(() => BottomHomeBar(index: 0,));
-          firestoreInstance.collection("Users").doc(_email).set(data);
+          Get.offAll(() => const BottomHomeBar(
+                index: 0,
+              ));
+          fireStoreInstance.collection("Users").doc(_email).set(data);
           setState(() {
             _isLoading = false;
           });
@@ -234,26 +238,32 @@ class _SignUpPageState extends State<SignUpPage> {
         });
         Get.snackbar('The password provided is too weak.',
             'The password provided is too weak.',
-            duration: Duration(seconds: 3),
+            duration: const Duration(seconds: 3),
             snackPosition: SnackPosition.BOTTOM);
-        print('The password provided is too weak.');
+        if (kDebugMode) {
+          print('The password provided is too weak.');
+        }
       } else if (e.code == 'email-already-in-use') {
         setState(() {
           _isLoading = false;
         });
         Get.snackbar('The account already exists for that email.',
             'The account already exists for that email.',
-            duration: Duration(seconds: 3),
+            duration: const Duration(seconds: 3),
             snackPosition: SnackPosition.BOTTOM);
-        print('The account already exists for that email.');
+        if (kDebugMode) {
+          print('The account already exists for that email.');
+        }
       }
     } catch (e) {
       setState(() {
         _isLoading = false;
       });
       Get.snackbar('Error.', 'Try again after Sometime',
-          duration: Duration(seconds: 3), snackPosition: SnackPosition.BOTTOM);
-      print(e);
+          duration: const Duration(seconds: 3), snackPosition: SnackPosition.BOTTOM);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }

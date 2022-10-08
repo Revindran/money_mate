@@ -6,14 +6,15 @@ import 'package:get_storage/get_storage.dart';
 import 'package:money_mate/Components/bottom_bar.dart';
 import 'package:money_mate/Screens/Auth/reset_password_ui.dart';
 import 'package:money_mate/Screens/Auth/signup_screen.dart';
-import 'package:money_mate/Screens/Pages/home_screen.dart';
 
 class SignInPage extends StatefulWidget {
+  const SignInPage({Key? key}) : super(key: key);
+
   @override
-  _SignInPageState createState() => _SignInPageState();
+  SignInPageState createState() => SignInPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class SignInPageState extends State<SignInPage> {
   late String _email;
 
   late String _password;
@@ -22,6 +23,7 @@ class _SignInPageState extends State<SignInPage> {
 
   var storage = GetStorage();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     _email = "";
@@ -39,7 +41,7 @@ class _SignInPageState extends State<SignInPage> {
             children: [
               Container(
                 height: MediaQuery.of(context).size.height / 1.8,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     borderRadius:
                         BorderRadius.vertical(bottom: Radius.circular(40)),
                     color: Colors.amber),
@@ -99,7 +101,7 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                       const SizedBox(height: 20.0),
                       TextField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Email address",
                         ),
@@ -110,7 +112,7 @@ class _SignInPageState extends State<SignInPage> {
                       const SizedBox(height: 16.0),
                       TextField(
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Password",
                         ),
@@ -121,14 +123,14 @@ class _SignInPageState extends State<SignInPage> {
                       const SizedBox(height: 16.0),
                       InkWell(
                         onTap: () => Get.to(() => ResetPasswordUI()),
-                        child: Align(
+                        child: const Align(
                             alignment: Alignment.centerLeft,
                             child: Text("Forgot your Password?")),
                       ),
                       const SizedBox(height: 20.0),
                       _isLoading
-                          ? CircularProgressIndicator()
-                          : Container(
+                          ? const CircularProgressIndicator()
+                          : SizedBox(
                               width: MediaQuery.of(context).size.width / 1.5,
                               // ignore: deprecated_member_use
                               child: RaisedButton(
@@ -140,7 +142,7 @@ class _SignInPageState extends State<SignInPage> {
                                 onPressed: () {
                                   _validateAndAuth();
                                 },
-                                child: Text("Login"),
+                                child: const Text("Login"),
                               ),
                             ),
                       const SizedBox(height: 20.0),
@@ -153,7 +155,7 @@ class _SignInPageState extends State<SignInPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           IconButton(
-                            icon: Icon(FontAwesomeIcons.google),
+                            icon: const Icon(FontAwesomeIcons.google),
                             color: Colors.indigo,
                             onPressed: () => Get.snackbar("Under Development",
                                 "This Function is not available at the moment.Please Use Email Login!.",
@@ -161,7 +163,7 @@ class _SignInPageState extends State<SignInPage> {
                                 snackStyle: SnackStyle.FLOATING),
                           ),
                           IconButton(
-                            icon: Icon(FontAwesomeIcons.twitter),
+                            icon: const Icon(FontAwesomeIcons.twitter),
                             color: Colors.blue,
                             onPressed: () => Get.snackbar("Under Development",
                                 "This Function is not available at the moment.Please Use Email Login!.",
@@ -177,7 +179,7 @@ class _SignInPageState extends State<SignInPage> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Don't have an account?"),
+                    const Text("Don't have an account?"),
                     const SizedBox(height: 5.0),
                     InkWell(
                       child: Text(
@@ -208,7 +210,7 @@ class _SignInPageState extends State<SignInPage> {
       Get.snackbar(
         'Please Fill all the fields..',
         'Please Fill all the fields...',
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
         snackPosition: SnackPosition.BOTTOM,
       );
     } else {
@@ -220,30 +222,30 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   void _authUser() async {
-      try {
-        await _auth
-            .signInWithEmailAndPassword(email: _email, password: _password)
-            .then((result) {
-          Get.snackbar(
-              'User Signing Successful..', 'User Signing Successfully Completed',
-              snackPosition: SnackPosition.BOTTOM,
-              duration: Duration(seconds: 3),
-              backgroundColor: Get.theme.snackBarTheme.backgroundColor,
-              colorText: Get.theme.snackBarTheme.actionTextColor);
-          storage.write('email', _email);
-          Get.offAll(() => BottomHomeBar(index: 0,));
-        });
-      } on Exception catch (e) {
-        setState(() {
-          _isLoading = false;
-        });
+    try {
+      await _auth
+          .signInWithEmailAndPassword(email: _email, password: _password)
+          .then((result) {
         Get.snackbar(
-            'Sign In Error', 'Your Email/Password is Incorrect',
+            'User Signing Successful..', 'User Signing Successfully Completed',
             snackPosition: SnackPosition.BOTTOM,
-            duration: Duration(seconds: 7),
+            duration: const Duration(seconds: 3),
             backgroundColor: Get.theme.snackBarTheme.backgroundColor,
             colorText: Get.theme.snackBarTheme.actionTextColor);
-      }
-
+        storage.write('email', _email);
+        Get.offAll(() => const BottomHomeBar(
+              index: 0,
+            ));
+      });
+    } on Exception {
+      setState(() {
+        _isLoading = false;
+      });
+      Get.snackbar('Sign In Error', 'Your Email/Password is Incorrect',
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 7),
+          backgroundColor: Get.theme.snackBarTheme.backgroundColor,
+          colorText: Get.theme.snackBarTheme.actionTextColor);
+    }
   }
 }

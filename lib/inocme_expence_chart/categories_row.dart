@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:money_mate/inocme_expence_chart/pie_chart.dart';
 
 class CategoriesRow extends StatelessWidget {
+  const CategoriesRow({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -20,9 +22,10 @@ class CategoriesRow extends StatelessWidget {
 
 class ExpenseCategory extends StatelessWidget {
   const ExpenseCategory({
+    Key? key,
     required this.index,
     required this.text,
-  });
+  }) : super(key: key);
 
   final int index;
   final String text;
@@ -30,7 +33,7 @@ class ExpenseCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: <Widget>[
           Container(
@@ -42,7 +45,7 @@ class ExpenseCategory extends StatelessWidget {
                   kNeumorphicColors.elementAt(index % kNeumorphicColors.length),
             ),
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           Text(
             text.capitalize(),
             style: TextStyle(
@@ -58,6 +61,6 @@ class ExpenseCategory extends StatelessWidget {
 
 extension StringExtension on String {
   String capitalize() {
-    return "${this[0].toUpperCase()}${this.substring(1)}";
+    return "${this[0].toUpperCase()}${substring(1)}";
   }
 }

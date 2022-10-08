@@ -8,7 +8,7 @@ class GridCardView extends StatelessWidget {
   final DocumentSnapshot snap;
   final VoidCallback openContainer;
 
-  GridCardView({required this.snap, required this.openContainer});
+  const GridCardView({Key? key,required this.snap, required this.openContainer}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +16,8 @@ class GridCardView extends StatelessWidget {
       openContainer: openContainer,
       width: Get.width,
       height: Get.height,
-      child: new GridTile(
-          child: new Column(
+      child:  GridTile(
+          child:  Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -29,13 +29,13 @@ class GridCardView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Title',
                         style: TextStyle(fontStyle: FontStyle.italic),
                       ),
                       Text(
                         snap['created'],
-                        style: TextStyle(fontSize: 8),
+                        style: const TextStyle(fontSize: 8),
                       ),
                     ],
                   ),
@@ -44,12 +44,12 @@ class GridCardView extends StatelessWidget {
                     softWrap: false,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    style: const TextStyle(fontSize: 16, color: Colors.black),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
-                  Text(
+                  const Text(
                     'Note',
                     style: TextStyle(fontStyle: FontStyle.italic),
                   ),
@@ -58,7 +58,7 @@ class GridCardView extends StatelessWidget {
                     softWrap: true,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 20, color: Colors.black),
+                    style: const TextStyle(fontSize: 20, color: Colors.black),
                   ),
                 ],
               ),

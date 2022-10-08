@@ -6,17 +6,19 @@ import 'package:money_mate/Components/add_note.dart';
 import 'package:money_mate/Components/notes_fetch.dart';
 
 class NotesPage extends StatefulWidget {
+  const NotesPage({Key? key}) : super(key: key);
+
 
   @override
-  _NotesPageState createState() => _NotesPageState();
+  NotesPageState createState() => NotesPageState();
 }
 
 const double _fabDimension = 56;
 
-class _NotesPageState extends State<NotesPage> {
+class NotesPageState extends State<NotesPage> {
   late String noteText;
   var storage = GetStorage();
-  ContainerTransitionType _transitionType = ContainerTransitionType.fade;
+  final _transitionType = ContainerTransitionType.fade;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class _NotesPageState extends State<NotesPage> {
       body: ShowNotes(),
       floatingActionButton: OpenContainer(
         transitionType: _transitionType,
-        openBuilder: (context, openContainer) => AddNotesPage(),
+        openBuilder: (context, openContainer) => const AddNotesPage(),
         closedElevation: 6,
         closedShape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
